@@ -6,7 +6,6 @@ const typeDefs = require("./schema/typeDefs");
 const resolvers = require("./resolvers");
 
 async function startServer() {
-  // Configurar Express e Apollo Server
   const app = express();
   const apolloServer = new ApolloServer({
     typeDefs,
@@ -14,15 +13,12 @@ async function startServer() {
     context: ({ req }) => ({ req }),
   });
 
-  // Conectar ao MongoDB
   await mongoose.connect(process.env.MONGODB_URI);
   console.log("🚀 Connected to MongoDB");
 
-  // Iniciar Apollo Server
   await apolloServer.start();
   apolloServer.applyMiddleware({ app });
 
-  // Iniciar servidor
   const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {
     console.log(

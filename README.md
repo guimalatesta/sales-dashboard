@@ -36,14 +36,14 @@ Full-stack analytics dashboard for e-commerce insights with GraphQL API and Reac
 
 ## Setup
 
-### Pré-requisitos
+### Reqs
 
 - Node.js 18+
 - MongoDB 7+
-- Redis 7+ (opcional)
+- Redis 7+ (optional)
 - Git
 
-### Instalação
+### Install
 
 ```bash
 git clone https://github.com/seu-usuario/sales-dashboard.git
@@ -52,11 +52,11 @@ cd sales-dashboard
 # Backend
 cd backend
 npm install
-cp .env.example .env # configure as variáveis
+cp .env.example .env
 npm run seed
 npm run dev
 
-# Frontend (em outro terminal)
+# Frontend
 cd ../frontend
 npm install
 npm run dev

@@ -2,7 +2,6 @@ const { Order, Product, Customer } = require("../models");
 const mongoose = require("mongoose");
 const redis = require("ioredis");
 
-// Configuração do Redis com tratamento de erro
 const redisClient = new redis({
   host: process.env.REDIS_HOST || "localhost",
   port: process.env.REDIS_PORT || 6379,
@@ -13,7 +12,6 @@ redisClient.on("error", (err) => {
   console.error("Redis connection error:", err);
 });
 
-// Função de cache genérica
 const cache = async (key, ttl, callback) => {
   try {
     const cached = await redisClient.get(key);
@@ -30,10 +28,9 @@ const cache = async (key, ttl, callback) => {
 
 module.exports = {
   Query: {
-    // 1️⃣ Resolver para Customer Spending
     getCustomerSpending: async (_, { customerId }) => {
       if (!mongoose.Types.ObjectId.isValid(customerId)) {
-        throw new Error("ID do cliente inválido");
+        throw new Error("Invalid customer ID");
       }
 
       return cache(`customer:${customerId}`, 3600, async () => {
@@ -73,7 +70,6 @@ module.exports = {
       });
     },
 
-    // 2️⃣ Resolver para Top Selling Products
     getTopSellingProducts: async (_, { limit }) => {
       return cache(`topProducts:${limit}`, 1800, async () => {
         const agg = await Order.aggregate([
@@ -113,7 +109,6 @@ module.exports = {
       });
     },
 
-    // 3️⃣ Resolver para Sales Analytics
     getSalesAnalytics: async (_, { startDate, endDate }) => {
       return cache(`analytics:${startDate}-${endDate}`, 600, async () => {
         const matchStage = {
@@ -178,10 +173,9 @@ module.exports = {
       });
     },
 
-    // 💡 Bônus: Resolver para Customer Orders com paginação
     getCustomerOrders: async (_, { customerId, page = 1, limit = 10 }) => {
       if (!mongoose.Types.ObjectId.isValid(customerId)) {
-        throw new Error("ID do cliente inválido");
+        throw new Error("Invalid customer ID");
       }
 
       const skip = (page - 1) * limit;
@@ -209,21 +203,18 @@ module.exports = {
   },
 
   Mutation: {
-    // 💡 Bônus: Resolver para criação de pedidos
     placeOrder: async (_, { customerId, items }) => {
       if (!mongoose.Types.ObjectId.isValid(customerId)) {
-        throw new Error("ID do cliente inválido");
+        throw new Error("Invalid customer ID");
       }
 
-      // Validar produtos
       const productIds = items.map((item) => item.productId);
       const products = await Product.find({ _id: { $in: productIds } });
 
       if (products.length !== items.length) {
-        throw new Error("Um ou mais produtos não encontrados");
+        throw new Error("Some products not found");
       }
 
-      // Criar itens do pedido com preços atuais
       const orderItems = items.map((item) => {
         const product = products.find((p) => p._id.equals(item.productId));
         return {

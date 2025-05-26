@@ -18,7 +18,7 @@ export default function CustomerForm({
       />
       <Button
         colorScheme="blue"
-        loading={loading}
+        isLoading={loading}
         disabled={!customerId}
         w="full"
       >

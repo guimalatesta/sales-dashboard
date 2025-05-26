@@ -38,8 +38,6 @@ export default function CustomerPage() {
             )}
           </Text>
         </Stat>
-
-        {/* Repetir para Average Order Value e Last Order Date */}
       </SimpleGrid>
     </div>
   );

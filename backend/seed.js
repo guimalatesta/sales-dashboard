@@ -2,18 +2,17 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const Product = require("./models/Product");
 const Order = require("./models/Order");
-const Customer = require("./models/Customer"); // Adicione esta linha
+const Customer = require("./models/Customer");
 
-// Dados de exemplo atualizados
 const customers = [
-  { name: "Cliente 1", email: "cliente1@example.com" },
-  { name: "Cliente 2", email: "cliente2@example.com" },
+  { name: "Customer 1", email: "customer1@example.com" },
+  { name: "Customer 2", email: "customer2@example.com" },
 ];
 
 const products = [
-  { name: "Smartphone X", category: "Eletrônicos", price: 2999.9 },
-  { name: "Notebook Pro", category: "Eletrônicos", price: 5499.9 },
-  { name: "Camisa Casual", category: "Vestuário", price: 149.9 },
+  { name: "Smartphone X", category: "Eletronics", price: 2999.9 },
+  { name: "Notebook Pro", category: "Eletronics", price: 5499.9 },
+  { name: "Dress", category: "Dresses", price: 149.9 },
 ];
 
 async function seedDatabase() {
@@ -21,18 +20,14 @@ async function seedDatabase() {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("🔃 Seeding database...");
 
-    // Limpar dados antigos
     await Product.deleteMany();
     await Order.deleteMany();
     await Customer.deleteMany();
 
-    // Criar customers
     const createdCustomers = await Customer.insertMany(customers);
 
-    // Inserir produtos
     const createdProducts = await Product.insertMany(products);
 
-    // Criar pedidos usando os customers e products criados
     const orders = [
       {
         customerId: createdCustomers[0]._id,

@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .chart-container {
+    @apply bg-white p-4 rounded-lg shadow-md;
+    height: 400px;
+  }
+
+  .stat-card {
+    @apply bg-white p-4 shadow-md rounded-md;
+  }
+}
